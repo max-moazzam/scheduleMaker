@@ -2,35 +2,50 @@
 //so that no player plays each other more than once until theyve played everyone else at least once
 	//Potential option for making Home/Away count
 
-//Enter an array
+//Enter an array and amount of weeks
 
 var enteredArray = ['Ann', 'Ben', 'Cam', 'Dan'];
-
-//Randomize Array, set equal to currentWeekArray
-var currentWeekArray = randomizeArray(createArray(enteredArray));
+var amountOfWeeks = 10;
 
 //Create an array of arrays for each option of every other player not including themselves (arrayOfPools[currentOptionPool1, currentOptionPool2, ...])
 var playerPools = createPools(enteredArray);
 
-var allMatchups = [];
-for (var i = 0; i < enteredArray.length; i++) {
-	//Select the first option of currentWeekArray, (player1)
-	var currentMatchup = [];
-	currentMatchup.push(currentWeekArray.shift());
+//for (var jj = 0; jj <= amountOfWeeks; jj++) {
 
-	//Select the corresponding currentOptionPool (player1currentOptionPool)
-	var currentOptionPool = poolSelector(currentMatchup, playerPools);
+	//Randomize Array, set equal to currentWeekArray
+	var currentWeekArray = randomizeArray(createArray(enteredArray));
 
-	//Randomly match player1 with someone from player1currentOptionPool (player2)
-	currentOptionPool = randomizeArray(currentOptionPool);
-	currentMatchup.push(currentOptionPool.shift());
-	allMatchups.push(currentMatchup);
-}
+	var allMatchups = [];
+	while (currentWeekArray.length > 0) {
+		//Select the first option of currentWeekArray, (player1)
+		var currentMatchup = [];
+		currentMatchup.push(currentWeekArray.shift());
 
+		//Select the corresponding currentOptionPool (player1currentOptionPool)
+		var currentOptionPool = poolSelector(currentMatchup[0], playerPools);
 
-//Cut out player2 from player1currentOptionPool
-//Cut out player1 from player2currentOptionPool (set as option so home/away 1 for each is possible)
-//Cut out player1 and player2 from currentWeekArray
+		if (currentOptionPool.length === 0) {
+			currentOptionPool = rebuildPool(currentMatchup[0], enteredArray);
+		}
+
+		//Randomly match player1 with someone from player1currentOptionPool (player2)
+		currentOptionPool = randomizeArray(currentOptionPool);
+		currentMatchup.push(currentOptionPool.shift()); 		//Also cuts out player 2 from player1's pool
+		allMatchups.push(currentMatchup);
+
+		//Cut out player1 from player2currentOptionPool (set as option so home/away 1 for each is possible)
+		var playerToCut = currentMatchup[0];
+		var poolToCutFrom = poolSelector(currentMatchup[1], playerPools);
+		var indexInPool = findIndex(playerToCut, poolToCutFrom);
+		poolToCutFrom.splice(indexInPool, 1);
+
+		//Cut out Player2 from currentWeekArray
+		var indexInPool = findIndex(currentMatchup[1], currentWeekArray);
+		currentWeekArray.splice(indexInPool, 1);
+	} 
+	console.log(allMatchups);
+//}
+
 //Repeat until currentWeekArray is empty
 	//If only 2 left then random match not necessary
 //If options run out, rebuild the arrays
@@ -100,6 +115,24 @@ function poolSelector(option, playerPools) {
 		if (option === playerPools[j].player) {
 			currentPool = playerPools[j].pool;
 			return currentPool;
+		}
+	}
+}
+
+function findIndex(element, array) {
+	for (var i = 0; i < array.length; i++) {
+		if (element === array[i]) {
+			var index = i;
+			return index
+		}
+	}
+}
+
+function rebuildPool(player, allOptions) {
+	for (var i = 0; i < allOptions.length; i++) {
+		if (allOptions[i] === player) {
+			allOptions.splice(i, 1);
+			return allOptions
 		}
 	}
 }
