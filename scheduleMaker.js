@@ -7,10 +7,10 @@
 var enteredArray = ['Ann', 'Ben', 'Cam', 'Dan'];
 var amountOfWeeks = 10;
 
-//Create an array of arrays for each option of every other player not including themselves (arrayOfPools[currentOptionPool1, currentOptionPool2, ...])
+//Creates an array of objects each containing a particular player and a pool of players to matchup with
 var playerPools = createPools(enteredArray);
 
-//for (var jj = 0; jj <= amountOfWeeks; jj++) {
+for (var jj = 0; jj <= amountOfWeeks; jj++) {
 
 	//Randomize Array, set equal to currentWeekArray
 	var currentWeekArray = randomizeArray(createArray(enteredArray));
@@ -36,21 +36,15 @@ var playerPools = createPools(enteredArray);
 		//Cut out player1 from player2currentOptionPool (set as option so home/away 1 for each is possible)
 		var playerToCut = currentMatchup[0];
 		var poolToCutFrom = poolSelector(currentMatchup[1], playerPools);
-		var indexInPool = findIndex(playerToCut, poolToCutFrom);
-		poolToCutFrom.splice(indexInPool, 1);
+		poolToCutFrom.splice(poolToCutFrom.indexOf(playerToCut, 1);
 
 		//Cut out Player2 from currentWeekArray
-		var indexInPool = findIndex(currentMatchup[1], currentWeekArray);
-		currentWeekArray.splice(indexInPool, 1);
+		currentWeekArray.splice(currentWeekArray.indexOf(currentMatchup[1], 1);
 	} 
-	console.log(allMatchups);
-//}
+}
 
-//Repeat until currentWeekArray is empty
-	//If only 2 left then random match not necessary
-//If options run out, rebuild the arrays
-//Repeat until amountOfWeeks is done
 
+//Helper functions
 
 function randomizeArray(array) {
 	var toShuffle = array.length - 1;
@@ -119,15 +113,6 @@ function poolSelector(option, playerPools) {
 	}
 }
 
-function findIndex(element, array) {
-	for (var i = 0; i < array.length; i++) {
-		if (element === array[i]) {
-			var index = i;
-			return index
-		}
-	}
-}
-
 function rebuildPool(player, allOptions) {
 	for (var i = 0; i < allOptions.length; i++) {
 		if (allOptions[i] === player) {
@@ -135,4 +120,9 @@ function rebuildPool(player, allOptions) {
 			return allOptions
 		}
 	}
+
+	//Repeat until currentWeekArray is empty
+	//If only 2 left then random match not necessary
+//If options run out, rebuild the arrays
+//Repeat until amountOfWeeks is done
 }
